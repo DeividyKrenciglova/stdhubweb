@@ -15,7 +15,7 @@ const CalcView = {
     el.innerHTML =
       '<div class="calc-wrap">' +
       '<div class="calc-preview" data-preview></div>' +
-      '<div class="calc-display" data-display role="textbox" aria-label="expression">0</div>' +
+      '<div class="calc-display" data-display data-tour="calc" role="textbox" aria-label="expression">0</div>' +
       '<div class="calc-grid" data-grid></div>' +
       '<div><button class="btn btn-ghost btn-sm" data-sci>ƒx Scientific</button></div>' +
       '<div class="calc-hist" data-hist></div>' +

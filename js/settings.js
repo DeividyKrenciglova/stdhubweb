@@ -31,6 +31,8 @@ const SettingsView = {
       '<div class="set-line"><button type="button" class="btn btn-outline btn-sm" data-ai-test></button>' +
       '<span class="small muted" data-ai-msg></span></div></div>' +
       '<label class="set-row"><span data-l-brave></span><input data-brave-key type="password" autocomplete="off" /></label>' +
+      '<div class="set-row"><span data-l-tour></span>' +
+      '<div class="set-line"><button type="button" class="btn btn-outline btn-sm" data-tour></button></div></div>' +
       '<div class="set-line"><button type="button" class="btn btn-outline btn-sm" data-clear></button>' +
       '<span class="small muted" data-saved></span></div>' +
       '<div class="modal-actions"><button class="btn btn-primary btn-sm" value="ok" data-done>OK</button></div>' +
@@ -60,6 +62,7 @@ const SettingsView = {
       });
     });
     q('[data-ai-test]').addEventListener('click', () => this.testAi());
+    q('[data-tour]').addEventListener('click', () => { dlg.close(); App.replayTour(); });
     q('[data-clear]').addEventListener('click', () => {
       Store.clear();
       I18n.setLang(Store.get('lang'));
@@ -93,6 +96,8 @@ const SettingsView = {
     q('[data-l-key]').textContent = I18n.t('app.aiKey');
     q('[data-ai-test]').textContent = I18n.t('app.aiTest');
     q('[data-l-brave]').textContent = I18n.t('app.braveKey');
+    q('[data-l-tour]').textContent = I18n.t('tour.open');
+    q('[data-tour]').textContent = I18n.t('tour.open');
     q('[data-clear]').textContent = I18n.t('app.clearData');
     q('[data-ai-preset]').value = Store.get('aiPreset');
     q('[data-ai-base]').value = Store.get('aiBaseUrl');

@@ -13,7 +13,7 @@ const ChatView = {
     this.el = el;
     el.innerHTML =
       '<div class="chat-wrap"><div class="chat-log" data-log></div>' +
-      '<form class="chat-form" data-form><input data-input /><button class="btn btn-primary" data-send></button></form></div>';
+      '<form class="chat-form" data-form><input data-input data-tour="tutor" /><button class="btn btn-primary" data-send></button></form></div>';
     this.ui = {
       log: el.querySelector('[data-log]'),
       form: el.querySelector('[data-form]'),

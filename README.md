@@ -10,6 +10,19 @@ navegador moderno abre, online ou com duplo clique offline.
 - **Vercel**: importe o repositório com **Root Directory = `web`**, sem
   comando de build e sem output directory customizado (estático puro).
 
+## Tour guiado
+
+Coach marks de 10 passos apontando para o controle real de cada passo
+(`data-tour="…"`), com a mesma matemática de posicionamento do app mobile
+(`mobile/src/lib/tour.ts`). Sem lib: só `getBoundingClientRect` + CSS.
+
+- Aparece sozinho na primeira visita ao app (marcado em `localStorage`).
+- De novo quando quiser: botão **?** na barra lateral, em Configurações ou
+  direto em `app.html?tour=1` (é o que o CTA da landing usa).
+- `→`/Enter avançam, `←` volta, `Esc` fecha, clicar no fundo avança.
+- Passo sem alvo visível (ex.: celular) cai para o cartão centralizado — o
+  tour nunca trava.
+
 ## Estrutura
 
 ```
@@ -25,12 +38,14 @@ js/i18n.js        PT/EN embutidos (sem fetch — funciona em file://)
 js/store.js       tema/idioma/chaves em localStorage
 js/ai.js          cliente OpenAI-compatível (fetch; só com rede)
 js/notebook.js    arquivos demo/localStorage/pasta local, editor, toolbar,
-                  caderno interativo, desenho à caneta
+                  caderno interativo, desenho à caneta, gaveta de arquivos
+                  no celular
 js/calcview.js    calculadora com histórico
 js/chat.js        tutor (precisa de chave de API + rede)
 js/search.js      pesquisa Brave (chave) + resumo por IA
 js/settings.js    modal de configurações + teste de conexão
 js/app.js         sidebar, abas, dock à direita
+js/tour.js        tour guiado (coach marks na UI real, sem libs)
 js/boot.js        registra as views no shell
 js/landing.js     menu mobile + ano
 ```

@@ -47,6 +47,21 @@ const App = {
     this.els.login.hidden = true;
     this.els.shell.hidden = false;
     this.openTab('notebook');
+    // First visit: show the tour once. `?tour=1` replays it on demand
+    // (that is what the landing page "ver o tour" button links to).
+    const replay = /[?&]tour=1/.test(window.location.search);
+    if (replay || !Tour.seen()) {
+      window.setTimeout(() => Tour.start(0), 350);
+    }
+  },
+
+  replayTour: function () {
+    if (!this.els.login.hidden) {
+      this.els.login.hidden = true;
+      this.els.shell.hidden = false;
+      this.openTab('notebook');
+    }
+    Tour.restart();
   },
 
   register: function (id, def) { this.views[id] = def; },
@@ -112,7 +127,8 @@ const App = {
     };
     const bar = this.els.sidebar;
     bar.innerHTML = '';
-    this.order.concat(['settings']).forEach((id, i, all) => {
+    const list = this.order.concat(['settings', 'tour']);
+    list.forEach((id) => {
       if (id === 'settings') {
         const sp = document.createElement('div');
         sp.className = 'side-spacer';
@@ -120,11 +136,13 @@ const App = {
       }
       const b = document.createElement('button');
       b.className = 'side-btn';
-      b.textContent = icons[id];
-      b.title = this.t(titles[id]);
-      b.setAttribute('aria-label', this.t(titles[id]));
+      b.dataset.id = id;
+      b.textContent = id === 'tour' ? '?' : icons[id];
+      b.title = this.t(id === 'tour' ? 'tour.open' : titles[id]);
+      b.setAttribute('aria-label', b.title);
       b.addEventListener('click', () => {
         if (id === 'settings') SettingsView.openModal();
+        else if (id === 'tour') this.replayTour();
         else this.openTab(id);
       });
       bar.appendChild(b);
@@ -140,10 +158,7 @@ const App = {
 
   renderSidebarActive: function () {
     const btns = this.els.sidebar.querySelectorAll('.side-btn');
-    const ids = this.order.concat(['settings']);
-    btns.forEach((b, i) => {
-      b.classList.toggle('active', this.active === ids[i]);
-    });
+    btns.forEach((b) => b.classList.toggle('active', this.active === b.dataset.id));
   },
 
   renderTabs: function () {
@@ -161,6 +176,7 @@ const App = {
       if (id !== 'notebook') {
         const pin = document.createElement('button');
         pin.className = 'pin';
+        pin.dataset.tour = 'pin';
         pin.textContent = '📌';
         pin.title = this.t('app.pinRight');
         pin.setAttribute('aria-label', this.t('app.pinRight'));
@@ -261,6 +277,7 @@ const App = {
     Object.keys(this.views).forEach((id) => {
       if (this.views[id].onLang) this.views[id].onLang();
     });
+    if (Tour.running) Tour.show();
   },
 };
 

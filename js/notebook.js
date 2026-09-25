@@ -81,6 +81,7 @@ const NotebookView = {
     this.el = el;
     el.innerHTML =
       '<div class="nb-wrap">' +
+      '<div class="nb-tree-veil" data-tree-veil></div>' +
       '<div class="nb-cols">' +
       '<div class="nb-tree" data-tree></div>' +
       '<div class="nb-edit-col">' +
@@ -92,8 +93,9 @@ const NotebookView = {
       '<dialog class="web-modal" data-newfile><form method="dialog" class="modal-stack">' +
       '<label class="small muted" data-newfile-label></label>' +
       '<input data-newfile-input />' +
-      '<div class="modal-actions"><button class="btn btn-secondary btn-sm" value="cancel" data-newfile-cancel></button>' +
-      '<button class="btn btn-primary btn-sm" value="ok" data-newfile-ok></button></div>' +
+      '<p class="small nb-err" data-newfile-err></p>' +
+      '<div class="modal-actions"><button class="btn btn-secondary btn-sm" type="button" data-newfile-cancel></button>' +
+      '<button class="btn btn-primary btn-sm" type="submit" value="ok" data-newfile-ok></button></div>' +
       '</form></dialog>' +
       '<dialog class="web-modal wide" data-ink><div class="modal-stack">' +
       '<div class="ink-tools" data-ink-tools></div>' +
@@ -104,7 +106,9 @@ const NotebookView = {
       '</div></dialog>' +
       '</div>';
     this.ui = {
+      wrap: el.querySelector('.nb-wrap'),
       tree: el.querySelector('[data-tree]'),
+      veil: el.querySelector('[data-tree-veil]'),
       filetabs: el.querySelector('[data-filetabs]'),
       toolbar: el.querySelector('[data-toolbar]'),
       editor: el.querySelector('[data-editor]'),
@@ -114,12 +118,24 @@ const NotebookView = {
     this.ui.newfile.querySelector('[data-newfile-label]').textContent = I18n.t('app.fileName');
     this.ui.newfile.querySelector('[data-newfile-cancel]').textContent = I18n.t('app.cancel');
     this.ui.newfile.querySelector('[data-newfile-ok]').textContent = I18n.t('app.create');
+    // Enter in the name field creates the file (the dialog would otherwise
+    // just close itself: <form method="dialog"> swallows implicit submit).
+    this.ui.newfile.querySelector('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.commitNewFile();
+    });
+    this.ui.newfile.querySelector('[data-newfile-cancel]').addEventListener('click', () => {
+      this.ui.newfile.close();
+    });
+    this.ui.veil.addEventListener('click', () => this.setTreeOpen(false));
     this.render();
   },
 
   onLang: function () {
     if (!this.el) return;
     this.ui.newfile.querySelector('[data-newfile-label]').textContent = I18n.t('app.fileName');
+    this.ui.newfile.querySelector('[data-newfile-cancel]').textContent = I18n.t('app.cancel');
+    this.ui.newfile.querySelector('[data-newfile-ok]').textContent = I18n.t('app.create');
     this.render();
   },
 
@@ -216,6 +232,19 @@ const NotebookView = {
   renderTree: function () {
     const t = this.ui.tree;
     t.innerHTML = '';
+    // The "new file" button lives here, so it is always rendered — even with
+    // no files yet. It was the one control missing exactly when you need it.
+    const bar = document.createElement('div');
+    bar.className = 'nb-tree-bar';
+    const add = document.createElement('button');
+    add.className = 'btn btn-ghost btn-sm';
+    add.dataset.tour = 'newfile';
+    add.textContent = '+ ' + I18n.t('app.newFile');
+    add.title = I18n.t('app.newFile');
+    add.setAttribute('aria-label', I18n.t('app.newFile'));
+    add.addEventListener('click', () => this.askNewFile());
+    bar.appendChild(add);
+    t.appendChild(bar);
     if (!this.files.size) {
       const empty = document.createElement('div');
       empty.className = 'center-hint';
@@ -224,29 +253,25 @@ const NotebookView = {
       const p2 = document.createElement('p');
       p2.className = 'muted small';
       p2.textContent = I18n.t('app.noFolderHint');
+      const b0 = document.createElement('button');
+      b0.className = 'btn btn-primary btn-sm';
+      b0.textContent = I18n.t('app.newFile');
+      b0.addEventListener('click', () => this.askNewFile());
       const b1 = document.createElement('button');
-      b1.className = 'btn btn-primary btn-sm';
+      b1.className = 'btn btn-outline btn-sm';
       b1.textContent = I18n.t('app.openFolder');
       b1.addEventListener('click', () => this.openFolder());
       const b2 = document.createElement('button');
       b2.className = 'btn btn-outline btn-sm';
       b2.textContent = I18n.t('app.useDemo');
       b2.addEventListener('click', () => this.useDemo());
-      empty.append(p1, p2, b1, b2);
+      empty.append(p1, p2, b0, b1, b2);
       empty.style.display = 'flex';
       empty.style.flexDirection = 'column';
       empty.style.gap = '0.5rem';
       t.appendChild(empty);
       return;
     }
-    const bar = document.createElement('div');
-    bar.style.cssText = 'display:flex;gap:0.25rem;margin-bottom:0.5rem';
-    const add = document.createElement('button');
-    add.className = 'btn btn-ghost btn-sm';
-    add.textContent = '+ ' + I18n.t('app.newFile');
-    add.addEventListener('click', () => this.askNewFile());
-    bar.appendChild(add);
-    t.appendChild(bar);
     Array.from(this.files.keys()).sort().forEach((path) => {
       const f = this.files.get(path);
       const b = document.createElement('button');
@@ -261,14 +286,67 @@ const NotebookView = {
     const dlg = this.ui.newfile;
     const input = dlg.querySelector('[data-newfile-input]');
     input.value = '';
-    dlg.showModal();
+    dlg.querySelector('[data-newfile-err]').textContent = '';
+    if (!dlg.open) dlg.showModal();
     input.focus();
-    dlg.querySelector('[data-newfile-ok]').onclick = (e) => {
-      e.preventDefault();
-      const path = this.createFile(input.value.trim());
-      dlg.close();
-      this.openFile(path);
-    };
+    input.select();
+  },
+
+  /* Creates the file (or explains why it cannot). Bound to the form submit,
+     so it fires from the button AND from Enter in the name field. */
+  commitNewFile: function () {
+    const dlg = this.ui.newfile;
+    const input = dlg.querySelector('[data-newfile-input]');
+    const err = dlg.querySelector('[data-newfile-err]');
+    const path = Stmd.ensureStudyExtension(input.value.trim() || 'sem-titulo');
+    if (this.files.has(path)) {
+      err.textContent = I18n.t('app.fileExists', { name: path });
+      input.focus();
+      input.select();
+      return;
+    }
+    dlg.close();
+    this.createFile(path);
+    this.openFile(path);
+  },
+
+  /* ---------- mobile file drawer ---------- */
+
+  narrow: function () {
+    return typeof window.matchMedia === 'function'
+      && window.matchMedia('(max-width: 720px)').matches;
+  },
+
+  setTreeOpen: function (open) {
+    if (!this.ui.wrap) return;
+    this.ui.wrap.classList.toggle('tree-open', !!open);
+    this.ui.veil.style.pointerEvents = open ? 'auto' : 'none';
+    const btn = this.ui.filetabs.querySelector('[data-files-btn]');
+    if (btn) btn.classList.toggle('on', !!open);
+  },
+
+  toggleTree: function () {
+    this.setTreeOpen(!this.ui.wrap.classList.contains('tree-open'));
+  },
+
+  /* Tour hook: guarantee a .stmd file is open in the requested mode, and
+     reveal the file drawer on small screens so its target is measurable. */
+  prepareForTour: function (mode) {
+    if (!this.files.size) this.useDemo();
+    if (!this.activePath) {
+      const first = this.files.has('guia.stmd') ? 'guia.stmd' : Array.from(this.files.keys())[0];
+      if (first) this.openFile(first);
+    }
+    this.setMode(mode);
+    if (this.narrow()) this.setTreeOpen(true);
+  },
+
+  setMode: function (mode) {
+    if (!this.activePath) return;
+    const f = this.activeFile();
+    if (!f || !Stmd.isStmdFile(f.name)) return;
+    this.modes[this.activePath] = mode;
+    this.render();
   },
 
   esc: function (s) {
@@ -278,6 +356,17 @@ const NotebookView = {
   renderTabs: function () {
     const bar = this.ui.filetabs;
     bar.innerHTML = '';
+    // On phones the tree is a drawer, so the only way to create/switch a
+    // file is this button — it must come first.
+    const files = document.createElement('button');
+    files.className = 'nb-files-btn';
+    files.dataset.filesBtn = '';
+    files.textContent = '📁';
+    files.title = I18n.t('app.files');
+    files.setAttribute('aria-label', I18n.t('app.files'));
+    files.addEventListener('click', () => this.toggleTree());
+    bar.appendChild(files);
+    if (this.ui.wrap.classList.contains('tree-open')) files.classList.add('on');
     this.open.forEach((path) => {
       const f = this.files.get(path);
       if (!f) return;
@@ -317,6 +406,7 @@ const NotebookView = {
       bEdit.addEventListener('click', () => { this.modes[this.activePath] = 'edit'; this.render(); });
       const bRead = document.createElement('button');
       bRead.className = 'nb-tool';
+      bRead.dataset.tour = 'readmode';
       bRead.textContent = '📖';
       bRead.title = I18n.t('app.readMode');
       bRead.setAttribute('aria-label', I18n.t('app.readMode'));
@@ -382,6 +472,7 @@ const NotebookView = {
   renderToolbar: function () {
     const bar = this.ui.toolbar;
     bar.innerHTML = '';
+    bar.dataset.tour = 'toolbar';
     const tools = [
       ['B', 'app.toolBold', () => this.wrapSel('**', '**')],
       ['I', 'app.toolItalic', () => this.wrapSel('*', '*')],
