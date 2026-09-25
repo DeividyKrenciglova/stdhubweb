@@ -204,6 +204,9 @@ button.nb-flash:hover { background: rgb(252 211 77 / 0.14); }
 .chat-msg.sys { border-style: dashed; color: var(--muted-foreground); align-self: center; font-size: 0.8125rem; }
 .chat-form { display: flex; gap: 0.5rem; padding: 0.75rem 1rem; border-top: 1px solid var(--border); }
 .chat-form input { flex: 1; }
+/* Two buttons + the field: let the row wrap instead of crushing the input. */
+.search-form { flex-wrap: wrap; }
+.search-form [data-google] { white-space: nowrap; }
 .search-hit { border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 0.875rem; }
 .search-hit a { font-weight: 600; }
 .search-hit p { margin: 0.375rem 0 0; color: var(--muted-foreground); font-size: 0.8125rem; }

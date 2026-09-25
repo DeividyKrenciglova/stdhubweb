@@ -42,7 +42,7 @@ js/notebook.js    arquivos demo/localStorage/pasta local, editor, toolbar,
                   no celular
 js/calcview.js    calculadora com histórico
 js/chat.js        tutor (precisa de chave de API + rede)
-js/search.js      pesquisa Brave (chave) + resumo por IA
+js/search.js      pesquisa no Google (sem chave) + Brave + resumo por IA
 js/settings.js    modal de configurações + teste de conexão
 js/app.js         sidebar, abas, dock à direita
 js/tour.js        tour guiado (coach marks na UI real, sem libs)
@@ -56,6 +56,10 @@ js/landing.js     menu mobile + ano
 - **IA só com sua chave + rede**: Pollinations sem chave responde 403 a
   `Origin` de navegador (testado); use um endpoint OpenAI-compatível.
   Sem rede, todo o resto funciona.
+- **Pesquisa vai para o Google**: sem chave de API, a Pesquisa abre
+  `google.com/search` com a sua consulta (nova aba + link clicável no log).
+  Com a chave Brave, os resultados e o resumo por IA aparecem no app — e o
+  botão "Abrir no Google" continua lá.
 - **Editor é textarea** (Monaco exigiria bundler/CDN): sem live-collapse
   do `#std` ao digitar — o modo Caderno renderiza tudo.
 - **Pastas locais** via File System Access API (Chrome/Edge); fora disso,

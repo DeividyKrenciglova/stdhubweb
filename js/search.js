@@ -1,4 +1,8 @@
-/* STDHub web — Research: Brave web search + AI summary. Needs key + net. */
+/* STDHub web — Research: Google web search + AI summary.
+   Google is the base path: it needs no key, no CORS and no account, so the
+   search always works — it just sends the person to the real results page.
+   With a Brave key configured we ALSO get results in-app plus the AI
+   summary; otherwise the query goes to Google and the log says so. */
 'use strict';
 
 const SearchView = {
@@ -12,26 +16,37 @@ const SearchView = {
     this.el = el;
     el.innerHTML =
       '<div class="chat-wrap"><div class="chat-log" data-log></div>' +
-      '<form class="chat-form" data-form><input data-input data-tour="search" /><button class="btn btn-primary" data-send></button></form></div>';
+      '<form class="chat-form search-form" data-form>' +
+      '<input data-input data-tour="search" />' +
+      '<button class="btn btn-outline" type="button" data-google></button>' +
+      '<button class="btn btn-primary" data-send></button></form></div>';
     this.ui = {
       log: el.querySelector('[data-log]'),
       form: el.querySelector('[data-form]'),
       input: el.querySelector('[data-input]'),
+      google: el.querySelector('[data-google]'),
       send: el.querySelector('[data-send]'),
     };
     this.ui.input.placeholder = I18n.t('app.searchPlaceholder');
     this.ui.input.setAttribute('aria-label', I18n.t('app.searchPlaceholder'));
     this.ui.send.textContent = I18n.t('app.search');
+    this.ui.google.textContent = I18n.t('app.googleSearch');
+    this.ui.google.title = I18n.t('app.googleSearch');
+    this.ui.google.setAttribute('aria-label', I18n.t('app.googleSearch'));
     this.ui.form.addEventListener('submit', (e) => {
       e.preventDefault();
       this.search(this.ui.input.value.trim());
     });
+    this.ui.google.addEventListener('click', () => this.openGoogle());
   },
 
   onLang: function () {
     if (!this.el) return;
     this.ui.input.placeholder = I18n.t('app.searchPlaceholder');
     this.ui.send.textContent = I18n.t('app.search');
+    this.ui.google.textContent = I18n.t('app.googleSearch');
+    this.ui.google.title = I18n.t('app.googleSearch');
+    this.ui.google.setAttribute('aria-label', I18n.t('app.googleSearch'));
   },
 
   say: function (cls, text, isHtml) {
@@ -48,11 +63,30 @@ const SearchView = {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   },
 
+  /* The real Google results page, in the student's language. */
+  googleUrl: function (q) {
+    const hl = I18n.lang === 'en' ? 'en' : 'pt-BR';
+    return 'https://www.google.com/search?q=' + encodeURIComponent(q) + '&hl=' + hl;
+  },
+
+  /* Called straight from the button, so it keeps the user gesture and the
+     popup blocker stays happy. `window.open` returns null whenever noopener
+     is set, so we never read the return value: the link below the message
+     is the real fallback when the tab does not open. */
+  openGoogle: function () {
+    const q = this.ui.input.value.trim();
+    if (!q) return;
+    window.open(this.googleUrl(q), '_blank', 'noopener,noreferrer');
+    this.googleNote(q, I18n.t('app.googleOpened', { query: q }));
+  },
+
   search: async function (q) {
     if (!q || this.busy) return;
     const key = Store.get('braveKey');
     if (!key) {
-      this.say('chat-msg sys', I18n.t('app.needKey'));
+      // No key: do not dead-end on a config screen — run the search on the
+      // web, which is the whole point of this view.
+      this.openGoogle();
       return;
     }
     this.busy = true;
@@ -74,6 +108,7 @@ const SearchView = {
     }
     if (!results.length) {
       this.say('chat-msg sys', '0 results');
+      this.googleNote(q);
       this.busy = false;
       return;
     }
@@ -81,6 +116,7 @@ const SearchView = {
       this.say('search-hit', '<a href="' + this.esc(r.url) + '" target="_blank" rel="noreferrer">' +
         this.esc(r.title || r.url) + '</a><p>' + this.esc(r.description || '') + '</p>', true);
     });
+    this.googleNote(q);
     const summaryBox = this.say('search-summary', I18n.t('app.summarizing'));
     try {
       const context = results.map((r, i) => '[' + (i + 1) + '] ' + r.title + ' — ' + (r.description || '')).join('\n');
@@ -94,6 +130,21 @@ const SearchView = {
     }
     this.busy = false;
     this.ui.log.scrollTop = this.ui.log.scrollHeight;
+  },
+
+  /* "See it on Google" line — the way out to the real web, kept next to
+     whatever the in-app search managed to show. */
+  googleNote: function (q, text) {
+    const box = this.say('chat-msg sys', text || '');
+    if (text) box.appendChild(document.createElement('br'));
+    const link = document.createElement('a');
+    link.href = this.googleUrl(q);
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = I18n.t('app.googleResults');
+    link.style.color = 'var(--info)';
+    box.appendChild(link);
+    return box;
   },
 };
 
