@@ -119,14 +119,37 @@ const App = {
     this.renderAll();
   },
 
+  icon: function (name) {
+    return window.Icons ? Icons.svg(name) : '';
+  },
+
+  viewIcon: function (id) {
+    return { notebook: 'notebook', calculator: 'calculator', research: 'search', tutor: 'chat' }[id] || 'file';
+  },
+
   renderSidebar: function () {
-    const icons = { notebook: '▤', calculator: '🔢', research: '◉', tutor: '✎', settings: '⚙' };
+    const icons = {
+      notebook: 'notebook', calculator: 'calculator', research: 'search', tutor: 'chat',
+      settings: 'sliders', tour: 'help',
+    };
     const titles = {
       notebook: 'app.notebook', calculator: 'app.calculator', research: 'app.research',
       tutor: 'app.tutor', settings: 'app.settings',
     };
+    const short = I18n.lang === 'en'
+      ? { notebook: 'Notes', calculator: 'Calc', research: 'Search', tutor: 'Tutor', settings: 'Settings', tour: 'Help' }
+      : { notebook: 'Caderno', calculator: 'Calc', research: 'Busca', tutor: 'Tutor', settings: 'Ajustes', tour: 'Ajuda' };
     const bar = this.els.sidebar;
     bar.innerHTML = '';
+
+    const brand = document.createElement('a');
+    brand.className = 'side-brand';
+    brand.href = 'index.html';
+    brand.title = 'STDHub';
+    brand.setAttribute('aria-label', 'STDHub');
+    brand.innerHTML = '<img src="assets/logo.svg" alt="" />';
+    bar.appendChild(brand);
+
     const list = this.order.concat(['settings', 'tour']);
     list.forEach((id) => {
       if (id === 'settings') {
@@ -134,12 +157,16 @@ const App = {
         sp.className = 'side-spacer';
         bar.appendChild(sp);
       }
+      const label = this.t(id === 'tour' ? 'tour.open' : titles[id]);
       const b = document.createElement('button');
       b.className = 'side-btn';
       b.dataset.id = id;
-      b.textContent = id === 'tour' ? '?' : icons[id];
-      b.title = this.t(id === 'tour' ? 'tour.open' : titles[id]);
-      b.setAttribute('aria-label', b.title);
+      b.type = 'button';
+      b.title = label;
+      b.setAttribute('aria-label', label);
+      b.innerHTML = this.icon(icons[id]) +
+        '<span class="side-label">' + short[id] + '</span>' +
+        '<span class="side-tip" aria-hidden="true">' + label + '</span>';
       b.addEventListener('click', () => {
         if (id === 'settings') SettingsView.openModal();
         else if (id === 'tour') this.replayTour();
@@ -158,7 +185,11 @@ const App = {
 
   renderSidebarActive: function () {
     const btns = this.els.sidebar.querySelectorAll('.side-btn');
-    btns.forEach((b) => b.classList.toggle('active', this.active === b.dataset.id));
+    btns.forEach((b) => {
+      const on = this.active === b.dataset.id;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
   },
 
   renderTabs: function () {
@@ -168,7 +199,12 @@ const App = {
       const v = this.views[id];
       const tab = document.createElement('div');
       tab.className = 'tab' + (this.active === id ? ' active' : '');
+      const tabIcon = document.createElement('span');
+      tabIcon.className = 'tab-ico';
+      tabIcon.innerHTML = this.icon(this.viewIcon(id));
+      tab.appendChild(tabIcon);
       const label = document.createElement('button');
+      label.className = 'tab-label';
       label.textContent = v.title();
       label.setAttribute('aria-label', v.title());
       label.addEventListener('click', () => this.openTab(id));
@@ -177,7 +213,7 @@ const App = {
         const pin = document.createElement('button');
         pin.className = 'pin';
         pin.dataset.tour = 'pin';
-        pin.textContent = '📌';
+        pin.innerHTML = this.icon('pin');
         pin.title = this.t('app.pinRight');
         pin.setAttribute('aria-label', this.t('app.pinRight'));
         pin.addEventListener('click', (e) => { e.stopPropagation(); this.pinRight(id); });
@@ -185,7 +221,7 @@ const App = {
       }
       const x = document.createElement('button');
       x.className = 'x';
-      x.textContent = '×';
+      x.innerHTML = this.icon('x');
       x.title = this.t('app.close');
       x.setAttribute('aria-label', this.t('app.close') + ' ' + v.title());
       x.addEventListener('click', (e) => { e.stopPropagation(); this.closeTab(id); });
@@ -246,20 +282,25 @@ const App = {
       const v = this.views[id];
       const tab = document.createElement('div');
       tab.className = 'tab' + (this.dockActive === id ? ' active' : '');
+      const dockIcon = document.createElement('span');
+      dockIcon.className = 'tab-ico';
+      dockIcon.innerHTML = this.icon(this.viewIcon(id));
+      tab.appendChild(dockIcon);
       const label = document.createElement('button');
+      label.className = 'tab-label';
       label.textContent = v.title();
       label.addEventListener('click', () => { this.dockActive = id; this.renderAll(); });
       tab.appendChild(label);
       const back = document.createElement('button');
       back.className = 'x';
-      back.textContent = '↩';
+      back.innerHTML = this.icon('undo');
       back.title = this.t('app.unpin');
       back.setAttribute('aria-label', this.t('app.unpin'));
       back.addEventListener('click', (e) => { e.stopPropagation(); this.undock(id); });
       tab.appendChild(back);
       const x = document.createElement('button');
       x.className = 'x';
-      x.textContent = '×';
+      x.innerHTML = this.icon('x');
       x.title = this.t('app.close');
       x.setAttribute('aria-label', this.t('app.close') + ' ' + v.title());
       x.addEventListener('click', (e) => { e.stopPropagation(); this.closeTab(id); });

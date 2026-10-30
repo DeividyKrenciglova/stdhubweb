@@ -16,13 +16,14 @@ const SettingsView = {
     dlg.innerHTML =
       '<form method="dialog" class="modal-stack" data-form>' +
       '<h3 data-title style="margin:0"></h3>' +
-      '<label class="set-row"><span data-l-theme></span><div class="set-line">' +
+      '<div class="set-group"><p class="set-group-title" data-g-look></p>' +
+      '<div class="set-row"><span data-l-theme></span><div class="set-line">' +
       '<button type="button" class="btn btn-outline btn-sm" data-theme-dark></button>' +
-      '<button type="button" class="btn btn-outline btn-sm" data-theme-light></button></div></label>' +
-      '<label class="set-row"><span data-l-lang></span><div class="set-line">' +
+      '<button type="button" class="btn btn-outline btn-sm" data-theme-light></button></div></div>' +
+      '<div class="set-row"><span data-l-lang></span><div class="set-line">' +
       '<button type="button" class="btn btn-outline btn-sm" data-lang-pt>Português</button>' +
-      '<button type="button" class="btn btn-outline btn-sm" data-lang-en>English</button></div></label>' +
-      '<div class="set-row"><span data-l-ai></span>' +
+      '<button type="button" class="btn btn-outline btn-sm" data-lang-en>English</button></div></div></div>' +
+      '<div class="set-group"><p class="set-group-title" data-l-ai></p>' +
       '<label class="small muted" data-l-preset></label><select data-ai-preset>' +
       '<option value="pollinations"></option><option value="openai"></option></select>' +
       '<label class="small muted" data-l-base></label><input data-ai-base />' +
@@ -30,11 +31,13 @@ const SettingsView = {
       '<label class="small muted" data-l-key></label><input data-ai-key type="password" autocomplete="off" />' +
       '<div class="set-line"><button type="button" class="btn btn-outline btn-sm" data-ai-test></button>' +
       '<span class="small muted" data-ai-msg></span></div></div>' +
-      '<label class="set-row"><span data-l-brave></span><input data-brave-key type="password" autocomplete="off" /></label>' +
+      '<div class="set-group"><p class="set-group-title" data-l-brave></p>' +
+      '<input data-brave-key type="password" autocomplete="off" /></div>' +
+      '<div class="set-group"><p class="set-group-title" data-g-data></p>' +
       '<div class="set-row"><span data-l-tour></span>' +
       '<div class="set-line"><button type="button" class="btn btn-outline btn-sm" data-tour></button></div></div>' +
       '<div class="set-line"><button type="button" class="btn btn-outline btn-sm" data-clear></button>' +
-      '<span class="small muted" data-saved></span></div>' +
+      '<span class="small muted" data-saved></span></div></div>' +
       '<div class="modal-actions"><button class="btn btn-primary btn-sm" value="ok" data-done>OK</button></div>' +
       '</form>';
     document.body.appendChild(dlg);
@@ -83,6 +86,8 @@ const SettingsView = {
     if (!this.dlg) return;
     const q = (s) => this.dlg.querySelector(s);
     q('[data-title]').textContent = I18n.t('app.settings');
+    q('[data-g-look]').textContent = I18n.t('app.groupLook');
+    q('[data-g-data]').textContent = I18n.t('app.groupData');
     q('[data-l-theme]').textContent = I18n.t('app.theme');
     q('[data-theme-dark]').textContent = I18n.t('app.dark');
     q('[data-theme-light]').textContent = I18n.t('app.light');
@@ -96,9 +101,15 @@ const SettingsView = {
     q('[data-l-key]').textContent = I18n.t('app.aiKey');
     q('[data-ai-test]').textContent = I18n.t('app.aiTest');
     q('[data-l-brave]').textContent = I18n.t('app.braveKey');
-    q('[data-l-tour]').textContent = I18n.t('tour.open');
+    q('[data-l-tour]').textContent = I18n.t('app.tourRow');
     q('[data-tour]').textContent = I18n.t('tour.open');
     q('[data-clear]').textContent = I18n.t('app.clearData');
+    const dark = Store.get('theme') !== 'light';
+    q('[data-theme-dark]').classList.toggle('on', dark);
+    q('[data-theme-light]').classList.toggle('on', !dark);
+    const lang = Store.get('lang');
+    q('[data-lang-pt]').classList.toggle('on', lang === 'pt');
+    q('[data-lang-en]').classList.toggle('on', lang === 'en');
     q('[data-ai-preset]').value = Store.get('aiPreset');
     q('[data-ai-base]').value = Store.get('aiBaseUrl');
     q('[data-ai-model]').value = Store.get('aiModel');

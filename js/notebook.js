@@ -276,7 +276,10 @@ const NotebookView = {
       const f = this.files.get(path);
       const b = document.createElement('button');
       b.className = 'nb-tree-row' + (path === this.activePath ? ' active' : '');
-      b.textContent = (Stmd.isStmdFile(f.name) ? '📓 ' : '📄 ') + path + (f.dirty ? ' •' : '');
+      b.innerHTML = Icons.svg(Stmd.isStmdFile(f.name) ? 'notebook' : 'file') +
+        '<span class="nb-tree-name"></span>' +
+        (f.dirty ? '<span class="nb-dirty" aria-hidden="true"></span>' : '');
+      b.querySelector('.nb-tree-name').textContent = path;
       b.addEventListener('click', () => this.openFile(path));
       t.appendChild(b);
     });
@@ -361,7 +364,7 @@ const NotebookView = {
     const files = document.createElement('button');
     files.className = 'nb-files-btn';
     files.dataset.filesBtn = '';
-    files.textContent = '📁';
+    files.innerHTML = Icons.svg('folder');
     files.title = I18n.t('app.files');
     files.setAttribute('aria-label', I18n.t('app.files'));
     files.addEventListener('click', () => this.toggleTree());
@@ -377,12 +380,12 @@ const NotebookView = {
       label.addEventListener('click', () => { this.activePath = path; this.render(); });
       const save = document.createElement('button');
       save.className = 'x';
-      save.textContent = '💾';
+      save.innerHTML = Icons.svg('save');
       save.title = I18n.t('app.save');
       save.addEventListener('click', (e) => { e.stopPropagation(); this.saveFile(path); });
       const x = document.createElement('button');
       x.className = 'x';
-      x.textContent = '×';
+      x.innerHTML = Icons.svg('x');
       x.title = I18n.t('app.close');
       x.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -399,18 +402,18 @@ const NotebookView = {
       const mode = this.modes[this.activePath] || 'edit';
       const bEdit = document.createElement('button');
       bEdit.className = 'nb-tool' + (mode === 'edit' ? ' active' : '');
-      bEdit.textContent = '✏️';
+      bEdit.innerHTML = Icons.svg('pencil');
       bEdit.title = I18n.t('app.edit');
       bEdit.setAttribute('aria-label', I18n.t('app.edit'));
-      bEdit.style.background = mode === 'edit' ? 'var(--muted)' : '';
+      bEdit.setAttribute('aria-pressed', String(mode === 'edit'));
       bEdit.addEventListener('click', () => { this.modes[this.activePath] = 'edit'; this.render(); });
       const bRead = document.createElement('button');
-      bRead.className = 'nb-tool';
+      bRead.className = 'nb-tool' + (mode === 'read' ? ' active' : '');
       bRead.dataset.tour = 'readmode';
-      bRead.textContent = '📖';
+      bRead.innerHTML = Icons.svg('book');
       bRead.title = I18n.t('app.readMode');
       bRead.setAttribute('aria-label', I18n.t('app.readMode'));
-      bRead.style.background = mode === 'read' ? 'var(--muted)' : '';
+      bRead.setAttribute('aria-pressed', String(mode === 'read'));
       bRead.addEventListener('click', () => { this.modes[this.activePath] = 'read'; this.render(); });
       modes.append(bEdit, bRead);
       bar.appendChild(modes);
@@ -480,18 +483,18 @@ const NotebookView = {
       ['++', 'app.toolUnderline', () => this.wrapSel('++', '++')],
       ['$', 'app.toolMath', () => this.wrapSel('$', '$')],
       ['H', 'app.toolHeading', () => this.insertAt('## ')],
-      ['❝', 'app.toolQuote', () => this.insertAt('> ')],
-      ['☰', 'app.toolList', () => this.insertAt('- ')],
-      ['☐', 'app.toolTask', () => this.insertAt('- [ ] ')],
-      ['🔗', 'app.toolLink', () => this.wrapSel('[', '](https://)')],
-      ['▦', 'app.toolTable', () => this.insertAt('| A | B |\n| --- | --- |\n| 1 | 2 |')],
-      ['🗂', 'app.toolFlash', () => this.insertAt(':::flashcard\npergunta\n---\nresposta\n:::')],
-      ['☑', 'app.toolQuiz', () => this.insertAt(':::quiz\npergunta\n- [ ] opção 1\n- [x] opção certa\n:::')],
-      ['🧮', 'app.toolCalc', () => this.insertAt('```calc\n2*(3+4)\n```')],
-      ['📌', 'app.toolCallout', () => this.insertAt(':::nota\ntexto\n:::')],
+      ['', 'app.toolQuote', () => this.insertAt('> '), 'quote'],
+      ['', 'app.toolList', () => this.insertAt('- '), 'list'],
+      ['', 'app.toolTask', () => this.insertAt('- [ ] '), 'quiz'],
+      ['', 'app.toolLink', () => this.wrapSel('[', '](https://)'), 'link'],
+      ['', 'app.toolTable', () => this.insertAt('| A | B |\n| --- | --- |\n| 1 | 2 |'), 'table'],
+      ['', 'app.toolFlash', () => this.insertAt(':::flashcard\npergunta\n---\nresposta\n:::'), 'cards'],
+      ['', 'app.toolQuiz', () => this.insertAt(':::quiz\npergunta\n- [ ] opção 1\n- [x] opção certa\n:::'), 'check'],
+      ['', 'app.toolCalc', () => this.insertAt('```calc\n2*(3+4)\n```'), 'calculator'],
+      ['', 'app.toolCallout', () => this.insertAt(':::nota\ntexto\n:::'), 'callout'],
       ['ƒx', 'app.toolInlineCalc', () => this.wrapSel('#stdcalc ', ' =')],
       ['✎', 'app.toolInlineMarker', () => this.wrapSel('#stdmarker ', ' /stdmarker')],
-      ['🖊', 'app.toolDrawing', () => this.openInk()],
+      ['', 'app.toolDrawing', () => this.openInk(), 'ink'],
     ];
     tools.forEach((def, i) => {
       if (i === 5 || i === 11 || i === 15) {
@@ -501,7 +504,7 @@ const NotebookView = {
       }
       const b = document.createElement('button');
       b.className = 'nb-tool';
-      b.textContent = def[0];
+      b.innerHTML = def[3] ? Icons.svg(def[3]) : '<span>' + def[0] + '</span>';
       b.title = I18n.t(def[1]);
       b.setAttribute('aria-label', I18n.t(def[1]));
       b.addEventListener('click', def[2]);

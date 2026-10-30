@@ -34,6 +34,37 @@ const ChatView = {
     if (!this.el) return;
     this.ui.input.placeholder = I18n.t('app.askPlaceholder');
     this.ui.send.textContent = I18n.t('app.send');
+    this.render();
+  },
+
+  /* Convite inicial: a view não pode abrir como um retângulo preto. */
+  emptyNode: function () {
+    const box = document.createElement('div');
+    box.className = 'chat-empty';
+    const ico = document.createElement('span');
+    ico.className = 'empty-ico';
+    if (window.Icons) ico.innerHTML = Icons.svg('chat');
+    const title = document.createElement('h2');
+    title.className = 'empty-title';
+    title.textContent = I18n.t('app.tutorEmptyTitle');
+    const text = document.createElement('p');
+    text.className = 'empty-text';
+    text.textContent = I18n.t('app.tutorEmptyText');
+    const label = document.createElement('p');
+    label.className = 'empty-label';
+    label.textContent = I18n.t('app.tutorTry');
+    const chips = document.createElement('div');
+    chips.className = 'empty-chips';
+    ['1', '2', '3'].forEach((n) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip';
+      b.textContent = I18n.t('app.tutorSay' + n);
+      b.addEventListener('click', () => this.ask(b.textContent));
+      chips.appendChild(b);
+    });
+    box.append(ico, title, text, label, chips);
+    return box;
   },
 
   push: function (role, text) {
@@ -45,6 +76,7 @@ const ChatView = {
     if (!this.el) return;
     const log = this.ui.log;
     log.innerHTML = '';
+    if (!this.msgs.length) log.appendChild(this.emptyNode());
     this.msgs.forEach((m) => {
       const d = document.createElement('div');
       d.className = 'chat-msg ' + m.role;

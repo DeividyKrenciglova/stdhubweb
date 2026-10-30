@@ -38,6 +38,40 @@ const SearchView = {
       this.search(this.ui.input.value.trim());
     });
     this.ui.google.addEventListener('click', () => this.openGoogle());
+    this.ui.log.appendChild(this.emptyNode());
+  },
+
+  emptyNode: function () {
+    const box = document.createElement('div');
+    box.className = 'chat-empty';
+    const ico = document.createElement('span');
+    ico.className = 'empty-ico';
+    if (window.Icons) ico.innerHTML = Icons.svg('search');
+    const title = document.createElement('h2');
+    title.className = 'empty-title';
+    title.textContent = I18n.t('app.searchEmptyTitle');
+    const text = document.createElement('p');
+    text.className = 'empty-text';
+    text.textContent = I18n.t('app.searchEmptyText');
+    const label = document.createElement('p');
+    label.className = 'empty-label';
+    label.textContent = I18n.t('app.searchTry');
+    const chips = document.createElement('div');
+    chips.className = 'empty-chips';
+    ['1', '2', '3'].forEach((n) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip';
+      b.textContent = I18n.t('app.searchSay' + n);
+      // Sugestão preenche o campo (sem abrir aba do Google de surpresa).
+      b.addEventListener('click', () => {
+        this.ui.input.value = b.textContent;
+        this.ui.input.focus();
+      });
+      chips.appendChild(b);
+    });
+    box.append(ico, title, text, label, chips);
+    return box;
   },
 
   onLang: function () {
@@ -47,9 +81,16 @@ const SearchView = {
     this.ui.google.textContent = I18n.t('app.googleSearch');
     this.ui.google.title = I18n.t('app.googleSearch');
     this.ui.google.setAttribute('aria-label', I18n.t('app.googleSearch'));
+    // Só o convite inicial é traduzido; resultados já carregados ficam como estão.
+    if (this.ui.log.querySelector('.chat-empty')) {
+      this.ui.log.innerHTML = '';
+      this.ui.log.appendChild(this.emptyNode());
+    }
   },
 
   say: function (cls, text, isHtml) {
+    const empty = this.ui.log.querySelector('.chat-empty');
+    if (empty) empty.remove();
     const d = document.createElement('div');
     d.className = cls;
     if (isHtml) d.innerHTML = text;

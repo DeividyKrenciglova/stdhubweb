@@ -17,7 +17,8 @@ const CalcView = {
       '<div class="calc-preview" data-preview></div>' +
       '<div class="calc-display" data-display data-tour="calc" role="textbox" aria-label="expression">0</div>' +
       '<div class="calc-grid" data-grid></div>' +
-      '<div><button class="btn btn-ghost btn-sm" data-sci>ƒx Scientific</button></div>' +
+      '<div class="calc-tools"><button class="btn btn-outline btn-sm" data-sci aria-pressed="false">' +
+        (window.Icons ? Icons.svg('sigma') : '') + '<span>ƒx Scientific</span></button></div>' +
       '<div class="calc-hist" data-hist></div>' +
       '</div>';
     this.ui = {
@@ -29,6 +30,8 @@ const CalcView = {
     };
     this.ui.sci.addEventListener('click', () => {
       this.sci = !this.sci;
+      this.ui.sci.classList.toggle('active', this.sci);
+      this.ui.sci.setAttribute('aria-pressed', String(this.sci));
       this.renderKeys();
     });
     this.renderKeys();
