@@ -7,12 +7,34 @@
   <meta name="description" content="STDHub — seu caderno de estudos no computador. Notebook .stmd com flashcards e quiz, calculadora, pesquisa, tutor e pastas locais. Privado por padrão, funciona offline." />
   <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
   <link rel="stylesheet" href="css/theme.css" />
-  <link rel="stylesheet" href="css/landing.css" />
+  <link rel="stylesheet" href="css/landing.css?v=14" />
   <title>STDHub — tudo pra estudar num só lugar</title>
 </head>
 <body class="page-landing">
 
   <a class="skip" href="#recursos">Pular para o conteúdo</a>
+
+  <!-- sprite de ícones da interface (mesmos traços do app) -->
+  <svg class="ui-sprite" aria-hidden="true" focusable="false">
+    <symbol id="ui-notebook" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2.6"/><path d="M8 3v18"/><path d="M11.5 8h5M11.5 12h5M11.5 16h3"/></symbol>
+    <symbol id="ui-calculator" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.6"/><path d="M8 7h8"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18.5h.01M12 18.5h.01M15.5 18.5h.01"/></symbol>
+    <symbol id="ui-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M15.8 15.8 20.5 20.5"/></symbol>
+    <symbol id="ui-chat" viewBox="0 0 24 24"><path d="M20 4.8H4v11.4h5.2L12 19.4l2.8-3.2H20z"/></symbol>
+    <symbol id="ui-sliders" viewBox="0 0 24 24"><path d="M4 7h8.5M17 7h3M4 17h3.5M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9.2" cy="17" r="2"/></symbol>
+    <symbol id="ui-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.3a2.4 2.4 0 1 1 3.4 2.2c-.7.4-1.1.9-1.1 1.7"/><path d="M12 16.6h.01"/></symbol>
+    <symbol id="ui-x" viewBox="0 0 24 24"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></symbol>
+    <symbol id="ui-file" viewBox="0 0 24 24"><path d="M6 3.5h7.6L18 8v12.5H6z"/><path d="M13.5 3.5V8H18"/></symbol>
+    <symbol id="ui-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="ui-pencil" viewBox="0 0 24 24"><path d="M4 20h3.9L20 7.9 16.1 4 4 16.1z"/><path d="m13.9 6.2 4 4"/></symbol>
+    <symbol id="ui-book" viewBox="0 0 24 24"><path d="M12 6.6C10 5 7 4.3 4 4.3v13.2c3 0 6 .7 8 2.3 2-1.6 5-2.3 8-2.3V4.3c-3 0-6 .7-8 2.3Z"/><path d="M12 6.6v13.2"/></symbol>
+    <symbol id="ui-list" viewBox="0 0 24 24"><path d="M8.5 7h11.5M8.5 12h11.5M8.5 17h11.5"/><path d="M4.2 7h.01M4.2 12h.01M4.2 17h.01"/></symbol>
+    <symbol id="ui-quote" viewBox="0 0 24 24"><path d="M9.4 6.5H5.8v4.2h3.6c0 3-1 5-3.6 6.6"/><path d="M18.6 6.5h-3.6v4.2h3.6c0 3-1 5-3.6 6.6"/></symbol>
+    <symbol id="ui-table" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2.2"/><path d="M3.5 10h17M9.5 10v9M15 10v9"/></symbol>
+    <symbol id="ui-check" viewBox="0 0 24 24"><path d="M5 12.5 9.6 17 19 7"/></symbol>
+    <symbol id="ui-link" viewBox="0 0 24 24"><path d="M10.2 13.8a4 4 0 0 1 0-5.6l2.2-2.2a4 4 0 0 1 5.6 5.6l-1.8 1.8"/><path d="M13.8 10.2a4 4 0 0 1 0 5.6l-2.2 2.2A4 4 0 0 1 6 12.4l1.8-1.8"/></symbol>
+    <symbol id="ui-callout" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 8v5.2M12 16.4h.01"/></symbol>
+    <symbol id="ui-sigma" viewBox="0 0 24 24"><path d="M17.5 5.5H7l5.2 6.5L7 18.5h10.5"/></symbol>
+  </svg>
 
   <header class="site-header" id="siteHeader">
     <div class="site-header-inner">
@@ -43,6 +65,21 @@
 
     <!-- ───────────────────────── HERO ───────────────────────── -->
     <section class="hero" id="inicio">
+      <div class="hero-study" aria-hidden="true">
+        <img class="hs hs-notebook" src="assets/study-notebook.svg" alt="" />
+        <img class="hs hs-pencil" src="assets/study-pencil.svg" alt="" />
+        <img class="hs hs-paperclip" src="assets/study-paperclip.svg" alt="" />
+        <img class="hs hs-ruler" src="assets/study-ruler.svg" alt="" />
+        <img class="hs hs-calculator" src="assets/study-calculator.svg" alt="" />
+        <img class="hs hs-pen" src="assets/study-pen.svg" alt="" />
+        <img class="hs hs-books" src="assets/study-books.svg" alt="" />
+        <img class="hs hs-cup" src="assets/study-cup.svg" alt="" />
+        <img class="hs hs-scissors" src="assets/study-scissors.svg" alt="" />
+        <img class="hs hs-eraser" src="assets/study-eraser.svg" alt="" />
+        <img class="hs hs-lamp" src="assets/study-lamp.svg" alt="" />
+        <img class="hs hs-globe" src="assets/study-globe.svg" alt="" />
+      </div>
+
       <div class="hero-bars" aria-hidden="true">
         <span></span><span></span><span></span><span></span><span></span>
         <span></span><span></span><span></span><span></span><span></span>
@@ -59,95 +96,132 @@
       </div>
 
       <div class="wrap hero-wrap">
-        <p class="hero-badge" id="heroBadge">
-          <span class="hero-badge-glow" aria-hidden="true"></span>
-          <span class="hero-badge-fill" aria-hidden="true"></span>
-          <span class="hero-badge-edge" aria-hidden="true"></span>
-          <span class="hero-badge-text">v0.1.0 — agora também no navegador</span>
-        </p>
+        <div class="hero-copy">
+          <div class="hero-book" aria-hidden="true">
+            <img src="assets/study-open-notebook.svg" alt="" />
+          </div>
 
-        <h1 class="hero-title" aria-label="Tudo pra estudar num só lugar">
-          <span class="hero-line">Tudo pra estudar</span>
-          <span class="hero-line">num <em class="serif">só</em> lugar</span>
-        </h1>
+          <p class="hero-badge" id="heroBadge">
+            <span class="hero-badge-glow" aria-hidden="true"></span>
+            <span class="hero-badge-fill" aria-hidden="true"></span>
+            <span class="hero-badge-edge" aria-hidden="true"></span>
+            <span class="hero-badge-text">v0.1.0 — agora também no navegador</span>
+          </p>
 
-        <p class="hero-sub">
-          Notebook <strong>.stmd</strong> com flashcards e quiz, calculadora científica,
-          pesquisa, tutor e pastas locais. Privado por padrão — e funcionando offline.
-        </p>
+          <h1 class="hero-title" aria-label="Tudo pra estudar num só lugar">
+            <span class="hero-line">Tudo pra estudar</span>
+            <span class="hero-line">num <em class="serif">só</em> lugar</span>
+          </h1>
 
-        <div class="hero-ctas">
-          <a class="btn-pill btn-solid btn-lg" href="app.html" data-roll>Abrir o app no navegador</a>
-          <a class="btn-pill btn-outline btn-lg" href="app.html?tour=1" data-roll>Fazer o tour guiado</a>
-          <a class="btn-pill btn-ghost btn-lg" href="#recursos">Ver recursos</a>
+          <p class="hero-sub">
+            Notebook <strong>.stmd</strong> com flashcards e quiz, calculadora científica,
+            pesquisa, tutor e pastas locais. Privado por padrão — e funcionando offline.
+          </p>
+
+          <div class="hero-ctas">
+            <div class="hero-ctas-left">
+              <a class="btn-pill btn-solid btn-lg" href="app.html" data-roll>Abrir o app</a>
+            </div>
+            <div class="hero-ctas-right">
+              <a class="btn-pill btn-outline btn-lg" href="app.html?tour=1" data-roll>Tour guiado</a>
+              <a class="btn-pill btn-ghost btn-lg" href="#recursos">Ver recursos</a>
+            </div>
+          </div>
+
+          <p class="hero-credit">
+            <img src="assets/barbosa-ferraz.png" width="320" height="320" alt="Logo do Colégio Estadual Barbosa Ferraz" />
+            <span>Projeto de <strong>Deividy Oliveira Krenciglova</strong> · Colégio Estadual Barbosa Ferraz</span>
+          </p>
         </div>
 
-        <p class="hero-credit">
-          <img src="assets/barbosa-ferraz.png" width="320" height="320" alt="Logo do Colégio Estadual Barbosa Ferraz" />
-          <span>Projeto de <strong>Deividy Oliveira Krenciglova</strong> · Colégio Estadual Barbosa Ferraz</span>
-        </p>
-
-        <!-- “editor” do hero: painel + app + inspetor -->
+        <!-- prévia do app: shell, rail, tabbar, árvore e documento -->
         <div class="hero-editor" id="heroEditor" aria-hidden="true">
-          <div class="panel">
-            <div class="panel-bar">
-              <span class="panel-dots"><i></i><i></i><i></i></span>
-              <span class="panel-file">guia.stmd</span>
-              <span class="panel-tags"><b>Offline</b><b>Visitante</b></span>
-            </div>
+          <div class="mock-app">
+            <div class="mock-shell">
+              <aside class="mock-rail">
+                <span class="mock-brand"><img src="assets/logo.svg" alt="" /></span>
+                <span class="mock-rail-btn is-active"><svg class="ico"><use href="#ui-notebook" /></svg></span>
+                <span class="mock-rail-btn"><svg class="ico"><use href="#ui-calculator" /></svg></span>
+                <span class="mock-rail-btn"><svg class="ico"><use href="#ui-search" /></svg></span>
+                <span class="mock-rail-btn"><svg class="ico"><use href="#ui-chat" /></svg></span>
+                <span class="mock-rail-spacer"></span>
+                <span class="mock-rail-btn"><svg class="ico"><use href="#ui-sliders" /></svg></span>
+                <span class="mock-rail-btn"><svg class="ico"><use href="#ui-help" /></svg></span>
+              </aside>
 
-            <div class="panel-body">
-              <div class="panel-rail">
-                <p class="rail-label">Páginas</p>
-                <ul>
-                  <li class="is-active"><span class="rail-ico"></span>Guia de estudo</li>
-                  <li><span class="rail-ico"></span>Revisão</li>
-                  <li><span class="rail-ico"></span>Cálculo</li>
-                  <li><span class="rail-ico"></span>Pesquisa</li>
-                </ul>
-                <p class="rail-label">Camadas</p>
-                <ul class="rail-nested">
-                  <li>flashcard</li>
-                  <li>quiz</li>
-                  <li>traço à caneta</li>
-                </ul>
-              </div>
+              <div class="mock-main">
+                <div class="mock-tabbar">
+                  <span class="mock-tab">
+                    <svg class="ico"><use href="#ui-notebook" /></svg>
+                    Notebook
+                    <span class="mock-tab-x"><svg class="ico"><use href="#ui-x" /></svg></span>
+                  </span>
+                  <span class="mock-status"><i></i>Offline · visitante</span>
+                </div>
 
-              <div class="panel-canvas">
-                <div class="doc">
-                  <div class="doc-tabs"><span class="is-active">guia.stmd</span><span>ideias.md</span><span class="doc-add">+</span></div>
-                  <div class="doc-body">
-                    <p class="doc-eyebrow">Revisão rápida</p>
-                    <div class="doc-flash"><strong>Quanto é 2+2?</strong><span>clique para virar</span></div>
-                    <div class="doc-quiz">
-                      <strong>Capital do Brasil?</strong>
-                      <div class="doc-opt">☐ São Paulo</div>
-                      <div class="doc-opt is-right">☑ Brasília <em>correta</em></div>
+                <div class="mock-work">
+                  <aside class="mock-tree">
+                    <span class="mock-new"><svg class="ico"><use href="#ui-plus" /></svg>Novo arquivo</span>
+                    <span class="mock-tree-row is-active"><svg class="ico"><use href="#ui-notebook" /></svg>guia.stmd</span>
+                    <span class="mock-tree-row"><svg class="ico"><use href="#ui-file" /></svg>ideias.md</span>
+                  </aside>
+
+                  <div class="mock-view">
+                    <div class="mock-files">
+                      <span class="mock-file">
+                        <svg class="ico"><use href="#ui-notebook" /></svg>
+                        guia.stmd
+                        <span class="mock-file-x"><svg class="ico"><use href="#ui-x" /></svg></span>
+                      </span>
+                      <span class="mock-file-actions">
+                        <span><svg class="ico"><use href="#ui-pencil" /></svg></span>
+                        <span class="is-on"><svg class="ico"><use href="#ui-book" /></svg></span>
+                      </span>
                     </div>
-                    <p class="doc-note">marcado com <mark>marca-texto</mark> e cálculo ao vivo: <code>√16 = 4</code></p>
+
+                    <div class="mock-toolbar">
+                      <span class="mock-tool is-on">B</span>
+                      <span class="mock-tool">I</span>
+                      <span class="mock-tool">H</span>
+                      <span class="mock-tool-sep"></span>
+                      <span class="mock-tool"><svg class="ico"><use href="#ui-list" /></svg></span>
+                      <span class="mock-tool"><svg class="ico"><use href="#ui-quote" /></svg></span>
+                      <span class="mock-tool"><svg class="ico"><use href="#ui-table" /></svg></span>
+                      <span class="mock-tool"><svg class="ico"><use href="#ui-check" /></svg></span>
+                      <span class="mock-tool"><svg class="ico"><use href="#ui-link" /></svg></span>
+                      <span class="mock-tool"><svg class="ico"><use href="#ui-callout" /></svg></span>
+                      <span class="mock-tool"><svg class="ico"><use href="#ui-sigma" /></svg></span>
+                    </div>
+
+                    <div class="mock-page">
+                      <div class="mock-page-inner">
+                        <h3>Guia de estudos</h3>
+                        <p class="mock-tags"><mark>fotossíntese</mark> e <span class="u">clorofila</span> e <code>x²</code></p>
+
+                        <div class="mock-flash">
+                          <strong>Quanto é 2+2?</strong>
+                          <span>Virar</span>
+                        </div>
+
+                        <div class="mock-quiz">
+                          <strong>Capital do Brasil?</strong>
+                          <span class="mock-opt">São Paulo</span>
+                          <span class="mock-opt is-right">Brasília</span>
+                          <span class="mock-verify">Verificar</span>
+                        </div>
+
+                        <div class="mock-calc"><span>2*(3+4)</span><b>14</b></div>
+                        <div class="mock-calc"><span>√16</span><b>4</b></div>
+                        <div class="mock-check"><i></i>ler capítulo 3</div>
+                        <div class="mock-check is-done"><i></i>resumo pronto</div>
+                        <div class="mock-callout">Revise os flashcards antes da prova.</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <div class="panel-inspector">
-                <p class="rail-label">Inspetor</p>
-                <dl>
-                  <div><dt>Arquivo</dt><dd>.stmd</dd></div>
-                  <div><dt>Tema</dt><dd>Escuro</dd></div>
-                  <div><dt>Rede</dt><dd>Não usada</dd></div>
-                  <div><dt>Salvo em</dt><dd>Seu disco</dd></div>
-                </dl>
-                <div class="insp-meter"><span></span></div>
-                <p class="insp-foot">100% local</p>
-              </div>
             </div>
           </div>
-
-          <div class="float-card float-calc">
-            <span class="float-label">Calculadora</span>
-            <b>2 × (3 + 4) = 14</b>
-          </div>
-          <div class="float-card float-offline"><i></i> sem internet, sem conta</div>
         </div>
       </div>
     </section>
@@ -203,9 +277,8 @@
 
         <div class="work-grid">
           <article class="work-card reveal" data-shine>
-            <div class="work-art art-notebook" aria-hidden="true">
-              <span class="art-line"></span><span class="art-line"></span><span class="art-line short"></span>
-              <span class="art-mark">marca-texto</span>
+            <div class="work-art art-notebook has-shot">
+              <img class="work-shot" src="assets/app-feature-notebook.webp" width="900" height="420" alt="Documento de estudo aberto no STDHub com flashcards e quiz" loading="lazy" />
             </div>
             <div class="work-meta">
               <span class="work-index">01</span>
@@ -216,10 +289,8 @@
           </article>
 
           <article class="work-card reveal" data-shine>
-            <div class="work-art art-calc" aria-hidden="true">
-              <div class="art-calc-row"><span>2*(3+4)</span><b>14</b></div>
-              <div class="art-calc-row"><span>√16</span><b>4</b></div>
-              <div class="art-calc-row"><span>15% de 240</span><b>36</b></div>
+            <div class="work-art art-calc has-shot">
+              <img class="work-shot" src="assets/app-feature-calc.webp?v=2" width="900" height="420" alt="Calculadora científica do STDHub exibindo o resultado 72" loading="lazy" />
             </div>
             <div class="work-meta">
               <span class="work-index">02</span>
@@ -230,9 +301,8 @@
           </article>
 
           <article class="work-card reveal" data-shine>
-            <div class="work-art art-search" aria-hidden="true">
-              <div class="art-search-bar"><span></span><i>pesquisar</i></div>
-              <div class="art-result"><b>Resumo</b><span></span><span></span><span class="short"></span></div>
+            <div class="work-art art-search has-shot">
+              <img class="work-shot" src="assets/app-feature-search.webp" width="900" height="420" alt="Tela de pesquisa do STDHub com sugestões de busca" loading="lazy" />
             </div>
             <div class="work-meta">
               <span class="work-index">03</span>
@@ -243,10 +313,8 @@
           </article>
 
           <article class="work-card reveal" data-shine>
-            <div class="work-art art-tutor" aria-hidden="true">
-              <div class="art-bubble">Como resolvo isso passo a passo?</div>
-              <div class="art-bubble is-reply">Vamos por partes: primeiro isole o x…</div>
-              <div class="art-typing"><i></i><i></i><i></i></div>
+            <div class="work-art art-tutor has-shot">
+              <img class="work-shot" src="assets/app-feature-tutor.webp" width="900" height="420" alt="Tela do tutor de estudos do STDHub com sugestões de perguntas" loading="lazy" />
             </div>
             <div class="work-meta">
               <span class="work-index">04</span>
@@ -257,11 +325,8 @@
           </article>
 
           <article class="work-card reveal" data-shine>
-            <div class="work-art art-folders" aria-hidden="true">
-              <div class="art-folder">aulas/</div>
-              <div class="art-folder is-open">revisão/</div>
-              <div class="art-file">guia.stmd</div>
-              <div class="art-file">prova.md</div>
+            <div class="work-art art-folders has-shot">
+              <img class="work-shot is-left" src="assets/app-feature-files.webp?v=2" width="900" height="420" alt="Explorador de arquivos do STDHub com os arquivos formulas.stmd, guia.stmd, ideias.md e resumo.md" loading="lazy" />
             </div>
             <div class="work-meta">
               <span class="work-index">05</span>
@@ -272,10 +337,8 @@
           </article>
 
           <article class="work-card reveal" data-shine>
-            <div class="work-art art-private" aria-hidden="true">
-              <div class="art-lock"><span></span></div>
-              <div class="art-pill">modo visitante</div>
-              <div class="art-pill">chave só no navegador</div>
+            <div class="work-art art-private has-icon">
+              <span class="private-badge"><img src="assets/icon-private.svg?v=2" alt="" /></span>
             </div>
             <div class="work-meta">
               <span class="work-index">06</span>
@@ -319,33 +382,36 @@
 
         <div class="approach-grid">
           <article class="approach-tile tile-a reveal" data-shine>
-            <span class="tile-num">01</span>
-            <h3>Abra o app</h3>
-            <p>Modo visitante entra direto, sem conta e sem senha. O tour guiado mostra cada controle no lugar real.</p>
-            <span class="tile-art" aria-hidden="true"></span>
+            <div class="tile-copy">
+              <span class="tile-num">01</span>
+              <h3>Abra o app</h3>
+              <p>Modo visitante entra direto, sem conta e sem senha. O tour guiado mostra cada controle no lugar real.</p>
+            </div>
+            <figure class="tile-media">
+              <img src="assets/app-step-1.webp" width="800" height="600" alt="Tela de boas-vindas do STDHub com o botão Continuar como visitante" loading="lazy" />
+            </figure>
           </article>
           <article class="approach-tile tile-b reveal" data-shine>
-            <span class="tile-num">02</span>
-            <h3>Abra uma pasta</h3>
-            <p>No Chrome ou Edge você escolhe uma pasta do computador. Se preferir, comece pelos arquivos de exemplo.</p>
-            <span class="tile-art" aria-hidden="true"></span>
+            <div class="tile-copy">
+              <span class="tile-num">02</span>
+              <h3>Abra uma pasta</h3>
+              <p>No Chrome ou Edge você escolhe uma pasta do computador. Se preferir, comece pelos arquivos de exemplo.</p>
+            </div>
+            <figure class="tile-media">
+              <img src="assets/app-step-2.webp" width="800" height="600" alt="Área de arquivos do STDHub com as opções Novo arquivo, Abrir pasta e Usar arquivos de exemplo" loading="lazy" />
+            </figure>
           </article>
           <article class="approach-tile tile-c reveal" data-shine>
-            <span class="tile-num">03</span>
-            <h3>Estude e feche</h3>
-            <p>Os arquivos ficam com você. A chave de IA, se você usar, fica guardada só no seu navegador.</p>
-            <span class="tile-art" aria-hidden="true"></span>
+            <div class="tile-copy">
+              <span class="tile-num">03</span>
+              <h3>Estude e feche</h3>
+              <p>Os arquivos ficam com você. A chave de IA, se você usar, fica guardada só no seu navegador.</p>
+            </div>
+            <figure class="tile-media">
+              <img src="assets/app-step-3.webp" width="800" height="600" alt="Documento de estudo aberto no STDHub com flashcards, quiz e cálculo" loading="lazy" />
+            </figure>
           </article>
         </div>
-      </div>
-    </section>
-
-    <!-- ───────────────────────── NÚMEROS ───────────────────────── -->
-    <section class="stats">
-      <div class="wrap stats-grid">
-        <div class="stat reveal"><b>10</b><span>passos no tour guiado</span></div>
-        <div class="stat reveal"><b>0</b><span>contas para começar</span></div>
-        <div class="stat reveal"><b>100<sup>%</sup></b><span>local, fora a IA opcional</span></div>
       </div>
     </section>
 
@@ -387,23 +453,23 @@
         <div class="faq-list">
           <details class="reveal">
             <summary><span>01</span>Precisa de internet?</summary>
-            <p>Não. Notebook, calculadora, arquivos e desenho funcionam offline; só a IA (tutor e resumos) precisa de rede e da sua chave de API.</p>
+            <div class="faq-answer"><p>Não. Notebook, calculadora, arquivos e desenho funcionam offline; só a IA (tutor e resumos) precisa de rede e da sua chave de API.</p></div>
           </details>
           <details class="reveal">
             <summary><span>02</span>Precisa criar conta?</summary>
-            <p>Não. O modo visitante entra direto e nada sai da sua máquina. Não existe login, senha ou painel na nuvem.</p>
+            <div class="faq-answer"><p>Não. O modo visitante entra direto e nada sai da sua máquina. Não existe login, senha ou painel na nuvem.</p></div>
           </details>
           <details class="reveal">
             <summary><span>03</span>O que é um arquivo .stmd?</summary>
-            <p>É um Markdown com superpoderes de estudo: flashcards, quiz, cálculos e desenho. Continua abrindo em qualquer editor de texto.</p>
+            <div class="faq-answer"><p>É um Markdown com superpoderes de estudo: flashcards, quiz, cálculos e desenho. Continua abrindo em qualquer editor de texto.</p></div>
           </details>
           <details class="reveal">
             <summary><span>04</span>Funciona no celular?</summary>
-            <p>Sim, o layout se adapta. Para instalar como app no Android, use o APK do release no GitHub.</p>
+            <div class="faq-answer"><p>Sim, o layout se adapta. Para instalar como app no Android, use o APK do release no GitHub.</p></div>
           </details>
           <details class="reveal">
             <summary><span>05</span>Onde ficam a minha chave de IA e os meus arquivos?</summary>
-            <p>A chave fica no armazenamento do próprio navegador e os arquivos na pasta que você escolher. Nenhum dos dois passa por um servidor do STDHub.</p>
+            <div class="faq-answer"><p>A chave fica no armazenamento do próprio navegador e os arquivos na pasta que você escolher. Nenhum dos dois passa por um servidor do STDHub.</p></div>
           </details>
         </div>
       </div>
@@ -492,6 +558,6 @@
     </div>
   </footer>
 
-  <script src="js/landing.js"></script>
+  <script src="js/landing.js?v=5"></script>
 </body>
 </html>

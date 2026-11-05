@@ -89,6 +89,25 @@
     revealables.forEach(function (el) { io.observe(el); });
   }
 
+  /* prévia do hero: entra somente depois do primeiro scroll */
+  var heroPreview = document.getElementById('heroEditor');
+  if (heroPreview) {
+    if (reduce) {
+      heroPreview.classList.add('is-in');
+    } else {
+      heroPreview.classList.add('is-hidden');
+      var revealPreview = function () {
+        if (heroPreview.getBoundingClientRect().top < window.innerHeight * 0.92) {
+          heroPreview.classList.remove('is-hidden');
+          heroPreview.classList.add('is-in');
+          window.removeEventListener('scroll', revealPreview);
+        }
+      };
+      window.addEventListener('scroll', revealPreview, { passive: true });
+      revealPreview();
+    }
+  }
+
   /* brilho que segue o cursor no badge do hero */
   var badge = document.getElementById('heroBadge');
   var hero = document.getElementById('inicio');
@@ -239,6 +258,55 @@
     });
     editor.addEventListener('pointerleave', function () {
       cards.forEach(function (card) { card.style.translate = ''; });
+    });
+  }
+  /* FAQ com abertura e fechamento em slide */
+  var faqList = document.querySelector('.faq-list');
+  if (faqList && !reduce) {
+    faqList.classList.add('is-animated');
+    faqList.querySelectorAll('details').forEach(function (details) {
+      var summary = details.querySelector('summary');
+      var answer = details.querySelector('.faq-answer');
+      if (!summary || !answer) return;
+
+      var busy = false;
+      answer.style.height = details.open ? 'auto' : '0px';
+
+      summary.addEventListener('click', function (event) {
+        event.preventDefault();
+        if (busy) return;
+        busy = true;
+
+        if (!details.open) {
+          details.open = true;
+          answer.style.height = '0px';
+          answer.classList.remove('is-visible');
+          requestAnimationFrame(function () {
+            answer.classList.add('is-visible');
+            answer.style.height = answer.scrollHeight + 'px';
+          });
+          answer.addEventListener('transitionend', function onOpen(e) {
+            if (e.propertyName !== 'height') return;
+            answer.removeEventListener('transitionend', onOpen);
+            answer.style.height = 'auto';
+            busy = false;
+          });
+        } else {
+          answer.style.height = answer.scrollHeight + 'px';
+          answer.classList.remove('is-visible');
+          void answer.offsetHeight;
+          requestAnimationFrame(function () {
+            answer.style.height = '0px';
+          });
+          answer.addEventListener('transitionend', function onClose(e) {
+            if (e.propertyName !== 'height') return;
+            answer.removeEventListener('transitionend', onClose);
+            details.open = false;
+            answer.style.height = '0px';
+            busy = false;
+          });
+        }
+      });
     });
   }
 })();
