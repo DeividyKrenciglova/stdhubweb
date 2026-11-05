@@ -138,6 +138,11 @@
   if (pong && pongLogo && !reduce) {
     var echoes = Array.prototype.slice.call(pong.querySelectorAll('.pong-echo'));
     var paddles = Array.prototype.slice.call(pong.querySelectorAll('.pong-paddle'));
+    var book = document.querySelector('.hero-book');
+    var bookGlow = book ? book.querySelector('.book-glow') : null;
+    var bookGlowDot = bookGlow ? bookGlow.querySelector('i') : null;
+    var bookHit = null;
+    var pongLit = false;
     var BW = 0, BH = 0, BS = 0, px = 0, py = 0, dx = 0, dy = 0;
     var pongRaf = 0, pongLast = 0, pongOn = false, hist = [];
     var paddleH = paddles.length ? paddles[0].offsetHeight : 56;
@@ -151,6 +156,20 @@
       paddles.forEach(function (el) {
         el.style.transform = 'translateY(' + (py + BS / 2 - paddleH / 2).toFixed(2) + 'px)';
       });
+      var logoX = px + BS / 2;
+      var logoY = py + BS / 2;
+      var hitW = bookHit ? Math.min(px + BS, bookHit.right) - Math.max(px, bookHit.left) : 0;
+      var hitH = bookHit ? Math.min(py + BS, bookHit.bottom) - Math.max(py, bookHit.top) : 0;
+      var lit = !!(bookHit && hitW > 6 && hitH > 6);
+      if (bookGlowDot && bookHit) {
+        var gx = logoX - bookHit.left;
+        var gy = logoY - bookHit.top;
+        bookGlowDot.style.transform = 'translate3d(' + gx.toFixed(1) + 'px,' + gy.toFixed(1) + 'px,0)';
+      }
+      if (lit !== pongLit) {
+        pongLit = lit;
+        if (bookGlow) bookGlow.classList.toggle('is-on', lit);
+      }
     };
 
     var measurePong = function () {
@@ -159,12 +178,25 @@
       BW = r.width;
       BH = r.height;
       BS = pongLogo.offsetWidth || 120;
+      if (book) {
+        var br = book.getBoundingClientRect();
+        var pageLeft = br.left + br.width * 0.05;
+        var pageTop = br.top + br.height * 0.075;
+        bookHit = {
+          left: pageLeft - r.left,
+          top: pageTop - r.top,
+          right: pageLeft + br.width * 0.9 - r.left,
+          bottom: pageTop + br.height * 0.85 - r.top
+        };
+      } else {
+        bookHit = null;
+      }
       if (!px && !py) {
         px = BW * 0.1;
         py = BH * 0.2;
         var ang = 0.62 + Math.random() * 0.5;
-        dx = 130 * Math.cos(ang);
-        dy = 130 * Math.sin(ang);
+        dx = 165 * Math.cos(ang);
+        dy = 165 * Math.sin(ang);
       }
       px = Math.max(0, Math.min(px, BW - BS));
       py = Math.max(0, Math.min(py, BH - BS));

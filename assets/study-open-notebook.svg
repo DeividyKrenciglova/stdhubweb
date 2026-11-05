@@ -1,14 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <defs>
-    <linearGradient id="paper-left" x1="0" y1="0" x2=".7" y2="1">
+    <linearGradient id="paper-book" gradientUnits="userSpaceOnUse" x1="60" y1="60" x2="1140" y2="740">
       <stop offset="0" stop-color="#0d1720"/>
-      <stop offset=".5" stop-color="#091016"/>
+      <stop offset=".55" stop-color="#091116"/>
       <stop offset="1" stop-color="#070b10"/>
-    </linearGradient>
-    <linearGradient id="paper-right" x1=".3" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0e1924"/>
-      <stop offset=".5" stop-color="#0a121b"/>
-      <stop offset="1" stop-color="#080d13"/>
     </linearGradient>
     <linearGradient id="ribbon" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#0a84ff"/>
@@ -17,24 +12,18 @@
   </defs>
 
   <!-- espessura / páginas empilhadas -->
-  <g transform="translate(0 10)" opacity=".55">
-    <path d="M84 60H600V740H84a24 24 0 0 1-24-24V84a24 24 0 0 1 24-24Z" fill="#04070a" vector-effect="non-scaling-stroke"/>
-    <path d="M1116 60H600V740h516a24 24 0 0 0 24-24V84a24 24 0 0 0-24-24Z" fill="#04070a" vector-effect="non-scaling-stroke"/>
+  <g transform="translate(0 10)" opacity=".4">
+    <rect x="60" y="60" width="1080" height="680" rx="24" fill="none" stroke="#ffffff12" vector-effect="non-scaling-stroke"/>
   </g>
 
   <!-- páginas conectadas no centro -->
-  <path d="M84 60H600V740H84a24 24 0 0 1-24-24V84a24 24 0 0 1 24-24Z" fill="url(#paper-left)" vector-effect="non-scaling-stroke"/>
-  <path d="M1116 60H600V740h516a24 24 0 0 0 24-24V84a24 24 0 0 0-24-24Z" fill="url(#paper-right)" vector-effect="non-scaling-stroke"/>
 
   <!-- contorno único do livro -->
-  <rect x="60" y="60" width="1080" height="680" rx="24" stroke-opacity=".55" vector-effect="non-scaling-stroke"/>
+  <rect x="60" y="60" width="1080" height="680" rx="24" fill="url(#paper-book)" fill-opacity=".8" stroke-opacity=".55" vector-effect="non-scaling-stroke"/>
 
   <!-- brilho azul nas bordas externas -->
   <path d="M60 84v632M1140 84v632M84 60H1116" stroke="#7acaff" stroke-opacity=".28" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
 
-  <!-- dobra central / costura -->
-  <path d="M600 60v680" stroke-opacity=".12" vector-effect="non-scaling-stroke"/>
-  <path d="M588 180h24M588 300h24M588 420h24M588 540h24M588 660h24" stroke-opacity=".1" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
 
   <!-- cabeçalho com marcador -->
   <circle cx="108" cy="160" r="3" fill="#7acaff" stroke="none" opacity=".55"/>
