@@ -528,11 +528,12 @@ button:focus-visible .roll-char { translate: 0 -50%; }
 }
 
 /* ───── logo do colégio quicando no fundo (pong) ───── */
-/* o campo do pong termina na linha de crédito (altura medida em js) */
+/* o campo do pong ocupa a altura inteira da tela do usuário */
 .hero-pong {
   position: absolute;
   inset: 0 0 auto;
-  height: 640px;
+  height: 100vh;
+  height: 100svh;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;

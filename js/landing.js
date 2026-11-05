@@ -153,15 +153,8 @@
       });
     };
 
-    var creditLine = document.querySelector('.hero-credit');
-
     var measurePong = function () {
-      // a área do jogo vai do topo do hero até a linha "Projeto de Deividy…"
-      var box = pong.getBoundingClientRect();
-      if (creditLine) {
-        var band = Math.max(240, Math.round(creditLine.getBoundingClientRect().bottom - box.top));
-        if (Math.abs(band - BH) > 1) pong.style.height = band + 'px';
-      }
+      // o campo do pong ocupa a altura inteira da tela
       var r = pong.getBoundingClientRect();
       BW = r.width;
       BH = r.height;
@@ -170,8 +163,8 @@
         px = BW * 0.1;
         py = BH * 0.2;
         var ang = 0.62 + Math.random() * 0.5;
-        dx = 74 * Math.cos(ang);
-        dy = 74 * Math.sin(ang);
+        dx = 130 * Math.cos(ang);
+        dy = 130 * Math.sin(ang);
       }
       px = Math.max(0, Math.min(px, BW - BS));
       py = Math.max(0, Math.min(py, BH - BS));
@@ -230,9 +223,6 @@
     window.addEventListener('resize', measurePong);
     window.addEventListener('load', measurePong);
     window.setTimeout(measurePong, 400);
-    if ('ResizeObserver' in window && creditLine && creditLine.parentElement) {
-      new ResizeObserver(measurePong).observe(creditLine.parentElement);
-    }
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) stopPong(); else startPong();
     });
