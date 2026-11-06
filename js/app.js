@@ -40,7 +40,6 @@ const App = {
     set('loginSub', 'app.loginSub');
     set('guestBtn', 'app.guest');
     set('guestNote', 'app.guestNote');
-    set('cloudOff', 'app.cloudOff');
   },
 
   enter: function () {
