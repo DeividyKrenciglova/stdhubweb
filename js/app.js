@@ -16,7 +16,7 @@ const App = {
   init: function () {
     Store.load();
     I18n.setLang(Store.get('lang'));
-    Store.applyTheme();
+    Store.applyPrefs();
     this.els = {
       login: document.getElementById('login'),
       shell: document.getElementById('shell'),

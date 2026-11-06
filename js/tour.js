@@ -112,6 +112,7 @@ const Tour = {
     root.className = 'tour';
     root.setAttribute('role', 'dialog');
     root.setAttribute('aria-modal', 'true');
+    root.setAttribute('aria-labelledby', 'tour-title');
     root.dataset.tourRoot = '';
     root.innerHTML =
       '<div class="tour-veil" data-veil></div>' +
@@ -119,7 +120,7 @@ const Tour = {
       '<div class="tour-card" data-card>' +
       '<div class="tour-top"><span class="tour-count" data-count></span>' +
       '<span class="tour-dots" data-dots></span></div>' +
-      '<h2 class="tour-title" data-title></h2>' +
+      '<h2 class="tour-title" id="tour-title" data-title></h2>' +
       '<p class="tour-text" data-text></p>' +
       '<div class="tour-actions">' +
       '<button class="btn btn-outline btn-sm" type="button" data-back></button>' +

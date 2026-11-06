@@ -5,20 +5,22 @@ const Store = {
   KEY: 'stdhub.web.settings',
   data: null,
   defaults: function () {
-    return {
-      theme: 'dark',
+    return Object.assign(Prefs.defaults(), {
       lang: 'pt',
       aiPreset: 'openai',
       aiBaseUrl: 'https://api.openai.com/v1',
       aiModel: 'gpt-4o-mini',
       aiKey: '',
       braveKey: '',
-    };
+    });
   },
   load: function () {
     try {
       const raw = window.localStorage.getItem(this.KEY);
-      this.data = Object.assign(this.defaults(), raw ? JSON.parse(raw) : {});
+      const saved = raw ? JSON.parse(raw) : {};
+      this.data = Object.assign(this.defaults(), saved);
+      // Quem nunca escolheu um tema recebe o novo padrão claro.
+      if (!saved.themeChosen) this.data.theme = 'light';
     } catch (e) {
       this.data = this.defaults();
     }
@@ -31,8 +33,8 @@ const Store = {
   },
   get: function (k) { return this.data[k]; },
   set: function (k, v) { this.data[k] = v; this.save(); },
-  applyTheme: function () {
-    document.documentElement.setAttribute('data-theme', this.data.theme === 'light' ? 'light' : 'dark');
+  applyPrefs: function () {
+    Prefs.apply(this.data);
   },
   clear: function () {
     try {
@@ -41,7 +43,7 @@ const Store = {
         .forEach(function (k) { window.localStorage.removeItem(k); });
     } catch (e) { /* ignore */ }
     this.data = this.defaults();
-    this.applyTheme();
+    this.applyPrefs();
   },
 };
 

@@ -1,11 +1,22 @@
 <!doctype html>
-<html lang="pt-BR" data-theme="dark">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="color-scheme" content="dark light" />
+  <meta name="color-scheme" content="light dark" />
   <meta name="description" content="STDHub no navegador — notebook, calculadora, pesquisa e tutor. 100% offline (IA com sua chave)." />
   <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+  <script src="js/prefs.js"></script>
+  <script>
+    /* Aplica tema, acessibilidade e personalização antes do primeiro paint. */
+    (function () {
+      var saved = {};
+      try {
+        saved = JSON.parse(window.localStorage.getItem('stdhub.web.settings') || '{}') || {};
+      } catch (e) { /* sem localStorage — usa os padrões */ }
+      if (window.Prefs) Prefs.bootstrap(saved);
+    })();
+  </script>
   <link rel="stylesheet" href="css/theme.css" />
   <link rel="stylesheet" href="css/app.css" />
   <title>STDHub</title>
